@@ -1,0 +1,85 @@
+############################################################################
+# Copyright [2019] [Khorgolkhuu Odbadrakh and Lonnie D. Crosby]
+# 
+#   Licensed under the Apache License, Version 2.0 (the "License");
+#   you may not use this file except in compliance with the License.
+#   You may obtain a copy of the License at
+# 
+#       http://www.apache.org/licenses/LICENSE-2.0
+# 
+#   Unless required by applicable law or agreed to in writing, software
+#   distributed under the License is distributed on an "AS IS" BASIS,
+#   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+#   See the License for the specific language governing permissions and
+#   limitations under the License.
+############################################################################
+
+Reference Manual for AFNI on Spark Cluster
+
+1. System Requirement
+
+Running AFNI pipeline tool on Apache Spark cluster requires the following on the compute
+system:
+
+- Apache Spark Cluster
+- Python, and Pyspark
+- AFNI 
+
+In addition, "afni_script.py" code is required (included in this directory)/
+
+2. AFNI
+
+AFNI is an open source code developed by many authors and distributed by NIH.
+AFNI performs range of analysis on fMRI data, and consists of many individual c, c++ codes, packaged and ran by python interface.
+
+This instruction is for running AFNI on Apache Spark cluster in general terms, so any further details regarding AFNI should be referred to https://afni.nimh.nih.gov/.
+
+References: 
+
+R1. AFNI: Software for analysis and visualization of functional magnetic resonance neuroimages, Computers and Biomedical Research, 29:162-173, 1996. RW Cox and JS Hyde. 
+
+R2. Software tools for analysis and visualization of FMRI Data. NMR in Biomedicine, 10:171-178, 1997
+
+2.1 AFNI DATA
+
+The data for AFNI analysis should be obtained from appropriate source. 
+
+2.2 Conditioning your AFNI run for Spark Cluster
+
+Spark cluster is intended for massively parallel data analysis. Therefore, large collection of fMRI data is expected to be available. Then the following steps are required:
+
+- All data to be analysed must be present in the working directory, labelled with different subject names such as: FT0, FT1, FT2, ...
+
+- Run the main afni script "afni_proc.py" for each of the above data set, which will result in shell scripts labeled such as proc.FT0, proc.FT1, ...
+
+Now, the working directory contains all the individual fMRI data, and corresponding shell scripts that will analyse them. This completes the conditioning of your large set of fMRI data for analysis on Spark cluster.
+
+3. Apache Spark Cluster
+
+Apache Spark Cluster is a parralel computing platform cetered around Resilient Distributed Dataset concept. Details of installing, setting up and running should be referred to: spark.apache.org/releases/spark-release-2-0-0.html
+
+References:
+
+R1. SparkR: Scaling R Programs with Spark, Shivaram Venkataraman, Zongheng Yang, Davies Liu, Eric Liang, Hossein Falaki, Xiangrui Meng, Reynold Xin, Ali Ghodsi, Michael Franklin, Ion Stoica, and Matei Zaharia. SIGMOD 2016. June 2016.
+
+R2. Resilient Distributed Datasets: A Fault-Tolerant Abstraction for In-Memory Cluster Computing. Matei Zaharia, Mosharaf Chowdhury, Tathagata Das, Ankur Dave, Justin Ma, Murphy McCauley,  Michael J. Franklin, Scott Shenker, Ion Stoica. NSDI 2012. April 2012.
+
+3.1 Running AFNI on Spark Cluster
+
+- AFNI module is loaded, or path to the afni executable is declared as an environmental 
+value and exported
+- Spark cluster is launched, master and worker processes started
+- afni_script.py is run on the Spark cluster using the following command:
+
+${SPARK_HOME}/bin/spark-submit \
+        --master ${sparkmaster} \
+        --total-executor-cores ${CORES_ALL_WORK} \
+        afni_script.py 
+
+4. Acknowledgement
+
+This material is based upon work supported by The University of Tennessee Joint Institute for Computational Sciences and Intel Corporation via a Parallel Computing Center award.  Any opinions, findings, conclusions, or recommendations expressed in this material are those of the author(s) and do not necessarily reflect the views of the University of Tennessee or Intel Corporation.
+
+# End of file
+
+
