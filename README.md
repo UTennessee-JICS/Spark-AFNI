@@ -1,2 +1,2 @@
 # Spark-AFNI
-Distributed AFNI workloads via Spark RDD.
+Distribute AFNI workloads via Spark RDD.
